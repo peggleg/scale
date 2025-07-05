@@ -1,0 +1,118 @@
+esphome:
+  name: scale
+  friendly_name: Scale
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "FeCzQYkAaYFnyU9ZRKoc970tEKVKTZxYDl06z4rqJjA="
+
+ota:
+  - platform: esphome
+    password: "2fde31db2b5206de9172c2b530073a04"
+
+wifi:
+  ssid: !secret iot_wifi_ssid
+  password: !secret iot_wifi_password
+
+time:
+  - platform: sntp
+    id: homeassistant_time
+    timezone: Europe/London
+    servers:
+      - pool.ntp.org
+    update_interval: 30s
+
+# I2C Bus for OLED
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  frequency: 400kHz # Adjust frequency if needed, 400kHz is common for displays
+
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x64" # Or "SSD1306 128x32" or "SH1106 128x64" depending on your display
+    address: 0x3C # Common addresses are 0x3C or 0x3D
+    rotation: 180° # Rotate display if needed
+    pages:
+      - id: main_page
+        lambda: |-
+          // Fixed: Changed .unit_of_measurement.c_str() to hardcoded "g"
+          it.printf(0, 0, id(my_font_12), "Weight: %.1f %s", id(hx711_sensor).state, "g");
+          it.printf(0, 15, id(my_font), "WiFi: %.0f dB", id(wifi_signal_sensor).state);
+          // Add more lines as needed
+          // Fixed: Changed time::ESPTime to ESPTime
+          ESPTime current_time = id(homeassistant_time).now();
+          if (current_time.is_valid()) {
+            it.strftime(0, 25, id(my_font), "%H:%M:%S", current_time);
+            it.strftime(0, 35, id(my_font), "%Y-%m-%d", current_time);
+          }
+    # Corrected indentation for update_interval
+    update_interval: 2s # How often to update the display
+
+# Add a font for the display
+font:
+  - file: "fonts/arial.ttf"
+    id: my_font
+    size: 10
+    glyphs: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~°µ³²"
+  - file: "fonts/arial.ttf"
+    id: my_font_12
+    size: 12
+    glyphs: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~°µ³²"
+
+sensor:
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    id: wifi_signal_sensor
+    update_interval: 30s
+
+  - platform: hx711
+    name: "Weight Sensor"
+    id: hx711_sensor
+    dout_pin: GPIO18
+    clk_pin: GPIO19
+    gain: 128
+    unit_of_measurement: "g" # Or "kg", "lb", etc. - Added this for better HA integration
+    update_interval: 5s # Changed from 60s to 5s
+    # You will need to calibrate this value. A common way is to:
+    # 1. Place a known weight on the scale and note the raw value.
+    # 2. Divide the known weight by the raw value to get a rough factor.
+    # 3. Fine-tune this factor until the readings are accurate.
+    # Alternatively, you can use the 'set_calibration' action to calibrate via Home Assistant.
+    # For initial testing, you can leave it out or set it to 1.0.
+    # Consult HX711 documentation for calibration methods specific to your setup.
+    # For example, if 1000g gives a raw value of 250000, then 1000/250000 = 0.004
+    # store_history: true # uncomment to store history in Home Assistant
+    filters:
+      - calibrate_linear:
+          - -283343 -> 0 # Zero point (no weight)
+          - -293900 -> 406 # Example: if 100000 raw value corresponds to 1000g
+
+text_sensor:
+  - platform: template
+    name: "Chip Model"
+    id: chip_model_text
+    icon: mdi:chip
+    update_interval: 600s
+    lambda: |-
+      esp_chip_info_t chip_info;
+      esp_chip_info(&chip_info);
+      if (chip_info.model == CHIP_ESP32) return {"ESP32"};
+      else if (chip_info.model == CHIP_ESP32S2) return {"ESP32-S2"};
+      else if (chip_info.model == CHIP_ESP32S3) return {"ESP32-S3"};
+      else if (chip_info.model == CHIP_ESP32C3) return {"ESP32-C3"};
+      else if (chip_info.model == CHIP_ESP32H2) return {"ESP32-H2"};
+      else return {"Unknown/New Model"};
+
+switch:
+  - platform: restart
+    name: "Restart device"
