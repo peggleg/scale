@@ -4,9 +4,9 @@ This project provides ESPHome configurations for building a WiFi-connected digit
 
 ## Features
 
-- **WiFi-enabled:** Integrates with Home Assistant for remote monitoring.
+- **WiFi-enabled:** Integrates with Home Assistant.
 - **Accurate weight measurement:** Uses HX711 and a load cell.
-- **Optional OLED display:** Shows weight, WiFi signal, and time.
+- **Optional OLED display:** Shows weight, date and time.
 - **Easy calibration:** Instructions included in the YAML files.
 - **Restart switch:** Remotely reboot the device from Home Assistant.
 
@@ -40,7 +40,6 @@ See `scale.webp` for the complete wiring diagram.
 - No display; all readings are sent to Home Assistant.
 - Sensors:
   - Weight (HX711, GPIO18/19)
-  - WiFi signal strength
   - ESP32 chip model (text sensor)
 - Includes a restart switch.
 - Calibration instructions in comments.
@@ -50,10 +49,10 @@ See `scale.webp` for the complete wiring diagram.
 - All features of `scale.yaml`.
 - Adds SSD1306 OLED display (I2C: SDA=GPIO21, SCL=GPIO22).
 - Displays:
-  - Current weight (in grams)
-  - WiFi signal strength
-  - Current time and date
+  - Current weight (in grams or kg depening on yaml setting)
+  - Current date and time
 - Custom fonts for improved readability.
+  - Add fonts to /esphome/fonts folder in Home Assistant
 
 ---
 
