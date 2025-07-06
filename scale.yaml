@@ -32,11 +32,6 @@ time:
     update_interval: 30s
 
 sensor:
-  - platform: wifi_signal
-    name: "WiFi Signal"
-    id: wifi_signal_sensor
-    update_interval: 30s
-
   - platform: hx711
     name: "Weight Sensor"
     id: hx711_sensor
@@ -57,7 +52,7 @@ sensor:
     filters:
       - calibrate_linear:
           - -283343 -> 0 # Zero point (no weight)
-          - -293900 -> 406 # Example: if 100000 raw value corresponds to 1000g
+          - -293900 -> 406 # Example: if 100000 raw value corresponds to 1000g or 1.0kg - This is set to g
 
 text_sensor:
   - platform: template
