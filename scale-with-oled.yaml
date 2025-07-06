@@ -35,12 +35,12 @@ time:
 i2c:
   sda: GPIO21
   scl: GPIO22
-  frequency: 400kHz # Adjust frequency if needed, 400kHz is common for displays
+  frequency: 400kHz
 
 display:
   - platform: ssd1306_i2c
-    model: "SSD1306 128x64" # Or "SSD1306 128x32" or "SH1106 128x64" depending on your display
-    address: 0x3C # Common addresses are 0x3C or 0x3D
+    model: "SSD1306 128x64"
+    address: 0x3C
     rotation: 180° # Rotate display if needed
     pages:
       - id: main_page
@@ -54,12 +54,10 @@ display:
           // Weight
           it.printf(0, 22, id(my_font_16), "Weight: %.1f %s", id(hx711_sensor).state, "kg");
           // it.printf(0, 35, id(my_font), "WiFi: %.0f dB", id(wifi_signal_sensor).state);
-          // Add more lines as needed
           
-    # Corrected indentation for update_interval
-    update_interval: 2s # How often to update the display
+    update_interval: 1s
 
-# Add a font for the display
+# Fonts
 font:
   - file: "fonts/arial.ttf"
     id: my_font
@@ -74,6 +72,7 @@ font:
     size: 16
     glyphs: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~°µ³²"
 
+
 sensor:
   - platform: wifi_signal
     name: "WiFi Signal"
@@ -86,17 +85,12 @@ sensor:
     dout_pin: GPIO18
     clk_pin: GPIO19
     gain: 128
-    unit_of_measurement: "kg" # Or "kg", "lb", etc. - Added this for better HA integration
+    unit_of_measurement: "kg" # Or "kg", "lb", etc.
     update_interval: 5s # Changed from 60s to 5s
-    # You will need to calibrate this value. A common way is to:
+    # You will need to calibrate this value
     # 1. Place a known weight on the scale and note the raw value.
     # 2. Divide the known weight by the raw value to get a rough factor.
     # 3. Fine-tune this factor until the readings are accurate.
-    # Alternatively, you can use the 'set_calibration' action to calibrate via Home Assistant.
-    # For initial testing, you can leave it out or set it to 1.0.
-    # Consult HX711 documentation for calibration methods specific to your setup.
-    # For example, if 1000g gives a raw value of 250000, then 1000/250000 = 0.004
-    # store_history: true # uncomment to store history in Home Assistant
     filters:
       - calibrate_linear:
           - -321265 -> 0 # Zero point (no weight)
