@@ -5,9 +5,9 @@ This project provides ESPHome configurations for building a WiFi-connected digit
 ## Features
 
 - **WiFi-enabled:** Integrates with Home Assistant.
-- **Accurate weight measurement:** Uses HX711 and a load cell.
+- **Weight measurement:** Uses HX711 and 4x half bridge load cells.
 - **Optional OLED display:** Shows weight, date and time.
-- **Easy calibration:** Instructions included in the YAML files.
+- **Calibration:** Instructions included in the YAML files.
 - **Restart switch:** Remotely reboot the device from Home Assistant.
 
 ---
