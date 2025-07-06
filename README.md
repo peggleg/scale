@@ -1,6 +1,7 @@
 # ESP32 WiFi Scale with HX711 (and Optional OLED Display)
 
 This project provides ESPHome configurations for building a WiFi-connected digital scale using an ESP32 and an HX711 load cell amplifier. An optional configuration adds an SSD1306 OLED display for local readout.
+![Screenshot 2025-07-06 at 07 43 54](https://github.com/user-attachments/assets/d6193f3d-bf91-4119-b5db-c2f1de8431bf)
 
 ## Features
 
