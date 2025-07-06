@@ -25,7 +25,8 @@ This project provides ESPHome configurations for building a WiFi-connected digit
 
 ## Wiring Diagram
 
-See `scale.png`
+![image](https://github.com/user-attachments/assets/d5a1535e-4ff4-46dc-a958-940d9072a721)
+
 
 ---
 
