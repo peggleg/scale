@@ -40,15 +40,10 @@ sensor:
     gain: 128
     unit_of_measurement: "g" # Or "kg", "lb", etc. - Added this for better HA integration
     update_interval: 5s # Changed from 60s to 5s
-    # You will need to calibrate this value. A common way is to:
+    # You will need to calibrate this value
     # 1. Place a known weight on the scale and note the raw value.
     # 2. Divide the known weight by the raw value to get a rough factor.
     # 3. Fine-tune this factor until the readings are accurate.
-    # Alternatively, you can use the 'set_calibration' action to calibrate via Home Assistant.
-    # For initial testing, you can leave it out or set it to 1.0.
-    # Consult HX711 documentation for calibration methods specific to your setup.
-    # For example, if 1000g gives a raw value of 250000, then 1000/250000 = 0.004
-    # store_history: true # uncomment to store history in Home Assistant
     filters:
       - calibrate_linear:
           - -283343 -> 0 # Zero point (no weight)
