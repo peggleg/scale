@@ -45,16 +45,17 @@ display:
     pages:
       - id: main_page
         lambda: |-
-          // Fixed: Changed .unit_of_measurement.c_str() to hardcoded "g"
-          it.printf(0, 0, id(my_font_12), "Weight: %.1f %s", id(hx711_sensor).state, "g");
-          it.printf(0, 15, id(my_font), "WiFi: %.0f dB", id(wifi_signal_sensor).state);
-          // Add more lines as needed
-          // Fixed: Changed time::ESPTime to ESPTime
+          // Time
           ESPTime current_time = id(homeassistant_time).now();
           if (current_time.is_valid()) {
-            it.strftime(0, 25, id(my_font), "%H:%M:%S", current_time);
-            it.strftime(0, 35, id(my_font), "%Y-%m-%d", current_time);
+            it.strftime(0, 0, id(my_font_12), "%H:%M:%S", current_time);
+            it.strftime(0, 12, id(my_font_12), "%Y-%m-%d", current_time);
           }
+          // Weight
+          it.printf(0, 22, id(my_font_16), "Weight: %.1f %s", id(hx711_sensor).state, "kg");
+          // it.printf(0, 35, id(my_font), "WiFi: %.0f dB", id(wifi_signal_sensor).state);
+          // Add more lines as needed
+          
     # Corrected indentation for update_interval
     update_interval: 2s # How often to update the display
 
@@ -62,11 +63,15 @@ display:
 font:
   - file: "fonts/arial.ttf"
     id: my_font
-    size: 10
+    size: 9
     glyphs: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~°µ³²"
   - file: "fonts/arial.ttf"
     id: my_font_12
     size: 12
+    glyphs: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~°µ³²"
+  - file: "fonts/arial.ttf"
+    id: my_font_16
+    size: 16
     glyphs: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~°µ³²"
 
 sensor:
@@ -81,7 +86,7 @@ sensor:
     dout_pin: GPIO18
     clk_pin: GPIO19
     gain: 128
-    unit_of_measurement: "g" # Or "kg", "lb", etc. - Added this for better HA integration
+    unit_of_measurement: "kg" # Or "kg", "lb", etc. - Added this for better HA integration
     update_interval: 5s # Changed from 60s to 5s
     # You will need to calibrate this value. A common way is to:
     # 1. Place a known weight on the scale and note the raw value.
@@ -94,8 +99,9 @@ sensor:
     # store_history: true # uncomment to store history in Home Assistant
     filters:
       - calibrate_linear:
-          - -283343 -> 0 # Zero point (no weight)
-          - -293900 -> 406 # Example: if 100000 raw value corresponds to 1000g
+          - -321265 -> 0 # Zero point (no weight)
+          - -332489 -> 0.406 # Example: if 100000 raw value corresponds to 1000g or 1.0kg - This is set to kg
+          - -339810 -> 0.681
 
 text_sensor:
   - platform: template
