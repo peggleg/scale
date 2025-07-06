@@ -16,7 +16,7 @@ This project provides ESPHome configurations for building a WiFi-connected digit
 
 - ESP32 development board
 - HX711 load cell amplifier
-- Load cell
+- 4x Half bridge load cells
 - (Optional) SSD1306 OLED display (I2C, 128x64 recommended)
 - Jumper wires, breadboard or PCB
 - (Optional) 3D-printed or custom scale enclosure
@@ -58,7 +58,7 @@ See `scale.png`
 1. **Clone this repository** and open in your favorite editor.
 
 2. **Wiring:**  
-   Follow the wiring diagram in `scale.webp` for your chosen configuration.
+   Follow the wiring diagram in `scale.png` for your chosen configuration.
 
 3. **Fonts (for OLED version):**  
    Ensure the `fonts/arial.ttf` file is present in the `fonts/` directory.
