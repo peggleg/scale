@@ -13,11 +13,11 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "="
+    key: "=" # Update with your own key
 
 ota:
   - platform: esphome
-    password: "4"
+    password: "4" # Update with your own password
 
 wifi:
   ssid: !secret iot_wifi_ssid
