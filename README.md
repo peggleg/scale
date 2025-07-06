@@ -27,7 +27,6 @@ This project provides ESPHome configurations for building a WiFi-connected digit
 
 ![image](https://github.com/user-attachments/assets/d5a1535e-4ff4-46dc-a958-940d9072a721)
 
-
 ---
 
 ## Configuration Files
@@ -58,28 +57,25 @@ This project provides ESPHome configurations for building a WiFi-connected digit
 
 1. **Clone this repository** and open in your favorite editor.
 
-2. **Wiring:**  
-   Follow the wiring diagram in `scale.png` for your chosen configuration.
-
-3. **Fonts (for OLED version):**  
+2. **Fonts (for OLED version):**  
    Ensure the `fonts/arial.ttf` file is present in the `fonts/` directory.
 
-4. **Secrets:**  
+3. **Secrets:**  
    Create a `secrets.yaml` file with your WiFi credentials:
    ```yaml
    iot_wifi_ssid: "YOUR_WIFI_SSID"
    iot_wifi_password: "YOUR_WIFI_PASSWORD"
    ```
 
-5. **Flashing:**
+4. **Flashing:**
    - Install [ESPHome](https://esphome.io/guides/installing_esphome.html).
    - Flash the desired YAML to your ESP32:
 
-6. **Calibration:**  
+5. **Calibration:**  
    - Place a known weight on the scale and follow the calibration comments in the YAML file.
    - Adjust the `calibrate_linear` filter as needed for accurate readings.
 
-7. **Home Assistant Integration:**  
+6. **Home Assistant Integration:**  
    - The device will auto-discover in Home Assistant if on the same network.
 
 ---
