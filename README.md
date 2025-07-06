@@ -25,10 +25,7 @@ This project provides ESPHome configurations for building a WiFi-connected digit
 
 ## Wiring Diagram
 
-See `scale.webp` for the complete wiring diagram.
-
-- **Basic version:** Connect ESP32 to HX711 and load cell.
-- **OLED version:** Also connect SSD1306 display to ESP32 I2C pins (SDA: GPIO21, SCL: GPIO22).
+See `scale.png`
 
 ---
 
