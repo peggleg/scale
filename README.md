@@ -73,11 +73,6 @@ See `scale.png`
 5. **Flashing:**
    - Install [ESPHome](https://esphome.io/guides/installing_esphome.html).
    - Flash the desired YAML to your ESP32:
-     ```sh
-     esphome run scale.yaml
-     # or for OLED version:
-     esphome run scale-with-oled.yaml
-     ```
 
 6. **Calibration:**  
    - Place a known weight on the scale and follow the calibration comments in the YAML file.
