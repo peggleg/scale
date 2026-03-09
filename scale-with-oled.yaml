@@ -13,11 +13,11 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "=" # Update with your own key
+    key: "xxx"
 
 ota:
   - platform: esphome
-    password: "4" # Update with your own password
+    password: "xxx"
 
 wifi:
   ssid: !secret iot_wifi_ssid
@@ -35,12 +35,12 @@ time:
 i2c:
   sda: GPIO21
   scl: GPIO22
-  frequency: 400kHz
+  frequency: 400kHz # Adjust frequency if needed, 400kHz is common for displays
 
 display:
   - platform: ssd1306_i2c
-    model: "SSD1306 128x64"
-    address: 0x3C
+    model: "SSD1306 128x64" # Or "SSD1306 128x32" or "SH1106 128x64" depending on your display
+    address: 0x3C # Common addresses are 0x3C or 0x3D
     rotation: 180° # Rotate display if needed
     pages:
       - id: main_page
@@ -54,10 +54,12 @@ display:
           // Weight
           it.printf(0, 22, id(my_font_16), "Weight: %.1f %s", id(hx711_sensor).state, "kg");
           // it.printf(0, 35, id(my_font), "WiFi: %.0f dB", id(wifi_signal_sensor).state);
+          // Add more lines as needed
           
-    update_interval: 1s
+    # Corrected indentation for update_interval
+    update_interval: 2s # How often to update the display
 
-# Fonts
+# Add a font for the display
 font:
   - file: "fonts/arial.ttf"
     id: my_font
@@ -72,7 +74,6 @@ font:
     size: 16
     glyphs: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~°µ³²"
 
-
 sensor:
   - platform: wifi_signal
     name: "WiFi Signal"
@@ -85,34 +86,26 @@ sensor:
     dout_pin: GPIO18
     clk_pin: GPIO19
     gain: 128
-    unit_of_measurement: "kg" # Or "kg", "lb", etc.
-    update_interval: 5s # Changed from 60s to 5s
-    # You will need to calibrate this value
+    unit_of_measurement: "g" # Or "kg", "lb", etc. - Added this for better HA integration
+    update_interval: 10s # Changed from 60s to 5s
+    # You will need to calibrate this value. A common way is to:
     # 1. Place a known weight on the scale and note the raw value.
     # 2. Divide the known weight by the raw value to get a rough factor.
     # 3. Fine-tune this factor until the readings are accurate.
+    # Alternatively, you can use the 'set_calibration' action to calibrate via Home Assistant.
+    # For initial testing, you can leave it out or set it to 1.0.
+    # Consult HX711 documentation for calibration methods specific to your setup.
+    # For example, if 1000g gives a raw value of 250000, then 1000/250000 = 0.004
+    # store_history: true # uncomment to store history in Home Assistant
     filters:
       - calibrate_linear:
-          - -321265 -> 0 # Zero point (no weight)
-          - -332489 -> 0.406 # Example: if 100000 raw value corresponds to 1000g or 1.0kg - This is set to kg
-          - -339810 -> 0.681
-
-text_sensor:
-  - platform: template
-    name: "Chip Model"
-    id: chip_model_text
-    icon: mdi:chip
-    update_interval: 600s
-    lambda: |-
-      esp_chip_info_t chip_info;
-      esp_chip_info(&chip_info);
-      if (chip_info.model == CHIP_ESP32) return {"ESP32"};
-      else if (chip_info.model == CHIP_ESP32S2) return {"ESP32-S2"};
-      else if (chip_info.model == CHIP_ESP32S3) return {"ESP32-S3"};
-      else if (chip_info.model == CHIP_ESP32C3) return {"ESP32-C3"};
-      else if (chip_info.model == CHIP_ESP32H2) return {"ESP32-H2"};
-      else return {"Unknown/New Model"};
-
+          - 1055946 -> 0 # Zero point (no weight)
+          - 1065241 -> 500 # Example: if 100000 raw value corresponds to 1000g or 1.0kg
+          - 1077434 -> 1000
+          - 1089473 -> 1500
+          - 1165056 -> 4900
+          - 1168999 -> 5073
+          - 1168831 -> 5066
 switch:
   - platform: restart
     name: "Restart device"
